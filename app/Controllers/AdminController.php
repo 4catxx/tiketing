@@ -1,60 +1,67 @@
-<?php
+<?php  
 
-namespace App\Controllers;
+namespace App\Controllers;  
 
-use App\Controllers\BaseController;
+use App\Controllers\BaseController;  
+use App\Models\TiketModel;  
+use App\Models\UsersModel;  
 
-class AdminController extends BaseController
-{
-    /**
-     * Show the Admin Beranda Page
-     */
+class AdminController extends BaseController  
+{  
+    protected $tiketModel;  
+    protected $usersModel;  
+
+    public function __construct()  
+    {  
+        $this->tiketModel = new TiketModel();  
+        $this->usersModel = new UsersModel();  
+    }  
+
     public function showBeranda()
+{
+    // Ambil semua data tiket tanpa filter vendor, urutkan berdasarkan tanggal terbaru
+    $dataTiket = $this->tiketModel->getAllTiketWithUserName();
+    $statusCounts = $this->tiketModel->getStatusCounts();
+
+    $data = [
+        'title_meta' => view('partials/title-meta', ['title' => 'Beranda Admin']),
+        'dataTiket' => $dataTiket,
+        'totalSelesai' => $statusCounts['Selesai'] ?? 0,
+        'totalDitanggapi' => $statusCounts['Sudah ditanggapi'] ?? 0,
+        'totalDalamPenanganan' => $statusCounts['Sedang Dalam Penanganan'] ?? 0,
+    ];
+
+    return view('admin/beranda', $data);
+}  
+
+public function showTiketPekerjaan()
     {
-        // Data dummy untuk pekerjaan
-        $dataPekerjaan = [
-            [
-                'id_tiket' => 1,
-                'id_user' => 1,
-                'vendor' => 'internal',
-                'tanggal' => '2025-01-01',
-                'laporan_pekerjaan' => 'Kerusakan pada mesin',
-                'tindakan' => 'Diganti spare part',
-                'status' => 'Selesai',
-            ],
-            [
-                'id_tiket' => 2,
-                'id_user' => 1,
-                'vendor' => 'external',
-                'tanggal' => '2025-01-02',
-                'laporan_pekerjaan' => 'Kerusakan jaringan',
-                'tindakan' => 'Diperbaiki oleh teknisi',
-                'status' => 'Dalam Penanganan',
-            ],
-            [
-                'id_tiket' => 3,
-                'id_user' => 1,
-                'vendor' => 'internal',
-                'tanggal' => '2025-01-03',
-                'laporan_pekerjaan' => 'Lampu tidak menyala',
-                'tindakan' => 'Ditanggapi, menunggu spare part',
-                'status' => 'Ditanggapi',
-            ],
-        ];
-
-        // Hitung total pekerjaan berdasarkan status
-        $totalSelesai = count(array_filter($dataPekerjaan, fn($row) => $row['status'] === 'Selesai'));
-        $totalDitanggapi = count(array_filter($dataPekerjaan, fn($row) => $row['status'] === 'Ditanggapi'));
-        $totalDalamPenanganan = count(array_filter($dataPekerjaan, fn($row) => $row['status'] === 'Dalam Penanganan'));
-
+        // Mengambil semua data tiket
         $data = [
-            'title_meta' => 'Beranda Admin',
-            'dataPekerjaan' => $dataPekerjaan,
-            'totalSelesai' => $totalSelesai,
-            'totalDitanggapi' => $totalDitanggapi,
-            'totalDalamPenanganan' => $totalDalamPenanganan,
+            'title_meta' => view('partials/title-meta', ['title' => 'Beranda Admin']),
+            'page_title' => 'Tiket Pekerjaan',
+            'tiket' => $this->tiketModel->getAllTiketWithUserName()
         ];
 
-        return view('admin/beranda', $data);
+        // Menampilkan view dengan data tiket
+        return view('admin/tiket-pekerjaan', $data);
     }
+
+    public function selesaikanTiket($id_tiket)  
+{  
+    // Ambil data tiket berdasarkan ID  
+    $tiket = $this->tiketModel->find($id_tiket);  
+
+    if ($tiket) {  
+        // Update status tiket menjadi "Selesai"  
+        $this->tiketModel->update($id_tiket, ['status' => 'Selesai']);  
+
+        // Redirect kembali ke halaman sebelumnya dengan pesan sukses  
+        return redirect()->back()->with('success', 'Status tiket berhasil diubah menjadi Selesai.');  
+    } else {  
+        // Redirect kembali dengan pesan error jika tiket tidak ditemukan  
+        return redirect()->back()->with('error', 'Tiket tidak ditemukan.');  
+    }  
+} 
+
 }

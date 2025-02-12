@@ -33,4 +33,9 @@ class UsersModel extends Model
 
         return $data;
     }
+
+    public function getUserById($id_user)
+    {
+        return $this->where('id_user', $id_user)->first();
+    }
 }

@@ -12,14 +12,14 @@
                 <li class="menu-title">Admin</li>
 
                 <li>
-                    <a href="/" class="waves-effect">
+                    <a href="beranda" class="waves-effect">
                         <i class="ti-home"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="/admin/ticket-pekerjaan" class="waves-effect">
+                    <a href="ticket-pekerjaan" class="waves-effect">
                         <i class="ti-clipboard"></i>
                         <span>Ticket Pekerjaan</span>
                     </a>

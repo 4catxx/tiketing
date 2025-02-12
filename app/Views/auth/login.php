@@ -3,7 +3,12 @@
 <head>
     <?= $title_meta ?>
     <?= $this->include('partials/head-css') ?>
+
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, proxy-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
 </head>
+
 
 <body>
     <div class="home-btn d-none d-sm-block">

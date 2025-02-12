@@ -49,7 +49,7 @@ class AuthController extends BaseController
 
                 // Redirect berdasarkan role
                 if ($user['role'] === 'Admin') {
-                    return redirect()->to('/dashboard'); // Admin diarahkan ke /dashboard
+                    return redirect()->to('/beranda'); // Admin diarahkan ke /dashboard
                 } elseif ($user['role'] === 'User') {
                     return redirect()->to('/form-pekerjaan'); // User diarahkan ke /beranda
                 }
@@ -117,7 +117,13 @@ class AuthController extends BaseController
      */
     public function logout()
     {
+        // Hapus semua session user untuk logout
         session()->destroy();
-        return redirect()->to('/login');
-    }
+    
+        // Setel header untuk mencegah caching halaman login di browser
+        return redirect()->to('/')->with('message', 'You have been logged out.')
+                             ->setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+                             ->setHeader('Pragma', 'no-cache')
+                             ->setHeader('Expires', '0');
+    }    
 }

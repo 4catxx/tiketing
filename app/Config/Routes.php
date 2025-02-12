@@ -40,7 +40,7 @@ $routes->get('/', 'AuthController::index');
 $routes->post('process-login', 'AuthController::processLogin');
 $routes->get('register', 'AuthController::showRegister');
 $routes->post('process-register', 'AuthController::processRegister');
-$routes->get('logout', 'AuthController::logout');
+$routes->post('logout', 'AuthController::logout');
 
 // User
 $routes->get('form-pekerjaan', 'UserController::showFormPekerjaan');
@@ -52,7 +52,8 @@ $routes->post('submit-vendor-eksternal', 'UserController::submitVendorEksternal'
 
 // Admin
 $routes->get('beranda', 'AdminController::showBeranda');
-$routes->get('data-pekerjaan', 'AdminController::showDataPekerjaan');
+$routes->get('ticket-pekerjaan', 'AdminController::showTiketPekerjaan');
+$routes->post('selesaikan-tiket/(:num)', 'AdminController::selesaikanTiket/$1');
 
 // Vertical Layout Pages Routes
 $routes->get('layouts-light-sidebar', 'Home::show_layouts_light_sidebar');
